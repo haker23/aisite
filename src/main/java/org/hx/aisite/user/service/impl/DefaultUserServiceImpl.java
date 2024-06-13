@@ -90,4 +90,23 @@ public class DefaultUserServiceImpl extends ServiceImpl<UserDao, User> implement
 
         return userForm;
     }
+
+    /**
+     * 更新用户信息
+     *
+     * @author fyh
+     * @param userForm:
+     * @return org.hx.aisite.user.entity.UserVo
+     * @date 2024/6/13 18:57
+     **/
+    @Override
+    public UserVo updateUser(UserVo userForm) {
+
+        int update = userDao.updateById(userForm);
+        if (update != 1) {
+            throw new BizException(ResponseResult.errorResult(ResponseCodeEnum.USER_SAVE_FAILURE));
+        }
+
+        return userForm;
+    }
 }

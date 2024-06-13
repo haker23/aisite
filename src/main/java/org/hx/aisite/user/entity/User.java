@@ -10,7 +10,7 @@ import lombok.Data;
 public class User {
 
     @TableId(type = IdType.AUTO)
-    private String id;
+    private int id;
 
     private String userId;
 
@@ -19,4 +19,10 @@ public class User {
     private String password;
 
     private String userType;
+
+    private String userName;
+
+    private String telNumber;
+
+    private int gender;
 }

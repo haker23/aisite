@@ -8,7 +8,10 @@
             U.ID,
             U.USER_ID,
             U.ACCOUNT,
-            U.PASSWORD
+            U.PASSWORD,
+            U.USER_NAME,
+            U.TEL_NUMBER,
+            U.GENDER
         FROM
             USER U
         WHERE

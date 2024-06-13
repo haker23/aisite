@@ -36,4 +36,14 @@ public interface UserService extends IService<User> {
      * @date 2024/6/13 15:51
      **/
     UserVo signUp(UserVo userForm);
+
+    /**
+     * 更新用户信息
+     *
+     * @author fyh
+     * @param userForm:
+     * @return org.hx.aisite.user.entity.UserVo
+     * @date 2024/6/13 18:56
+     **/
+    UserVo updateUser(UserVo userForm);
 }

@@ -62,4 +62,18 @@ public class UserControl {
     public UserVo signUp(@RequestBody UserVo userForm) {
         return defaultUserService.signUp(userForm);
     }
+
+    /**
+     * 更新用户信息
+     *
+     * @author fyh
+     * @param userForm:
+     * @return org.hx.aisite.user.entity.UserVo
+     * @date 2024/6/13 18:56
+     **/
+    @RequestMapping(value = "/update", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public UserVo updateUser(@RequestBody UserVo userForm) {
+        return defaultUserService.updateUser(userForm);
+    }
 }
