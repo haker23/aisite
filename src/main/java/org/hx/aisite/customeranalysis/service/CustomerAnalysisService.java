@@ -1,5 +1,6 @@
 package org.hx.aisite.customeranalysis.service;
 
+import com.github.pagehelper.PageInfo;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysis;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisQueryReq;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisVo;
@@ -21,7 +22,7 @@ public interface CustomerAnalysisService{
      * @return
      * @author zhanggk
      */
-    List<CustomerAnalysisVo> selectPageList(CustomerAnalysisQueryReq queryReq);
+    PageInfo<CustomerAnalysisVo> selectPageList(CustomerAnalysisQueryReq queryReq);
 
     /**
      * 获取单条数据

@@ -1,5 +1,9 @@
 package org.hx.aisite.customeranalysis.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.hx.aisite.counselor.model.ConsultantsVo;
 import org.hx.aisite.customeranalysis.dao.CustomerAnalysisDao;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysis;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisQueryReq;
@@ -34,8 +38,12 @@ public class CustomerAnalysisServiceImpl implements CustomerAnalysisService {
      * @author zhanggk
      */
     @Override
-    public List<CustomerAnalysisVo> selectPageList(CustomerAnalysisQueryReq queryReq) {
-        return customerAnalysisDao.selectPageList(queryReq);
+    public PageInfo<CustomerAnalysisVo> selectPageList(CustomerAnalysisQueryReq queryReq) {
+        Page<CustomerAnalysisVo> page = PageHelper.startPage(queryReq.getPageNum(), queryReq.getPageSize());
+
+        List<CustomerAnalysisVo> list = customerAnalysisDao.selectPageList(queryReq);
+
+        return page.toPageInfo();
     }
 
     /**

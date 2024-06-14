@@ -1,5 +1,6 @@
 package org.hx.aisite.customeranalysis.control;
 
+import com.github.pagehelper.PageInfo;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisQueryReq;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisVo;
 import org.hx.aisite.customeranalysis.service.CustomerAnalysisService;
@@ -61,7 +62,7 @@ public class CustomerAnalysisControl {
      */
     @RequestMapping(value = "/customeranalysis/customeranalysis/query", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<CustomerAnalysisVo> queryCustomerAnalysis(@RequestBody CustomerAnalysisQueryReq queryReq) {
+    public PageInfo<CustomerAnalysisVo> queryCustomerAnalysis(@RequestBody CustomerAnalysisQueryReq queryReq) {
         return customerAnalysisService.selectPageList(queryReq);
     }
 }
