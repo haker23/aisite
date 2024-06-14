@@ -7,7 +7,6 @@
         select
             a.*
         from customer_analysis a
-        inner join user t on t.USER_ID = a.USER_ID
         <trim prefix="where" prefixOverrides="AND|OR">
             <!--查询条件按需设置-->
             <!-->
