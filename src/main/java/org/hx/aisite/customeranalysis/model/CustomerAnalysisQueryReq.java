@@ -41,4 +41,12 @@ public class CustomerAnalysisQueryReq{
      * 客户居住地址
      */
     private String residentialAddress;
+    /**
+     * 当前页
+     */
+    private int pageNum;
+    /**
+     * 每页最大条数
+     */
+    private int pageSize;
 }
