@@ -1,10 +1,3 @@
-/**
- * 版权所有：华信软件
- * 项目名称: 浙江ICT项目系统
- * 创建者: zhanggk
- * 创建日期: 2024-06-14
- * 文件说明: 见类描述
- */
 package org.hx.aisite.interviewrecords.service;
 
 import com.github.pagehelper.PageInfo;
