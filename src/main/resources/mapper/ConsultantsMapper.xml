@@ -25,6 +25,11 @@
             T.UPDATE_DATE
         FROM
             CONSULTANTS T
+        <trim prefix="where" prefixOverrides="AND|OR">
+            <if test="name != null and name != ''">
+                AND T.NAME LIKE CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+            </if>
+        </trim>
     </select>
     <!--获取单条数据	-->
     <select id="selectById" parameterType="java.lang.String"

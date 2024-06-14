@@ -11,7 +11,11 @@
             U.PASSWORD,
             U.USER_NAME,
             U.TEL_NUMBER,
-            U.GENDER
+            U.GENDER,
+            DECODE(U.GENDER,
+                '1', '男',
+                '0', '女'
+            ) GENDER_VALUE
         FROM
             USER U
         WHERE

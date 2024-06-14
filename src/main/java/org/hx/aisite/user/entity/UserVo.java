@@ -6,4 +6,6 @@ import lombok.Data;
 public class UserVo extends User {
 
     private String confirmPassword;
+
+    private String genderValue;
 }

@@ -27,4 +27,5 @@ public class ConsultantsQueryReq {
      */
     private int pageSize;
 
+    private String name;
 }
