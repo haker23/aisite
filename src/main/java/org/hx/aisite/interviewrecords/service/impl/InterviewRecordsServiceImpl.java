@@ -1,5 +1,6 @@
 package org.hx.aisite.interviewrecords.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -11,6 +12,7 @@ import org.hx.aisite.interviewrecords.service.InterviewRecordsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,7 +22,7 @@ import java.util.List;
  * @date 2024-06-14
  */
 @Service
-public class InterviewRecordsServiceImpl implements InterviewRecordsService {
+public class InterviewRecordsServiceImpl extends ServiceImpl<InterviewRecordsDao, InterviewRecords> implements InterviewRecordsService {
 
     /**
      * 存储咨询访谈详细记录的表(InterviewRecords) 数据访问
@@ -54,6 +56,17 @@ public class InterviewRecordsServiceImpl implements InterviewRecordsService {
     @Override
     public InterviewRecordsVo selectById(String id) {
         return interviewRecordsDao.selectById(id);
+    }
+
+    @Override
+    public void save(InterviewRecordsVo interviewRecordsVo) {
+
+        interviewRecordsVo.setInterviewDate(new Date());
+        interviewRecordsVo.setStartTime(new Date());
+        interviewRecordsVo.setEndTime(new Date());
+        interviewRecordsVo.setInterviewMode("线上");
+
+        interviewRecordsDao.insert(interviewRecordsVo);
     }
 }
 

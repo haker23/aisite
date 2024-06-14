@@ -52,4 +52,10 @@ public class InterviewRecordsControl {
     public PageInfo<InterviewRecordsVo> queryInterviewRecords(@RequestBody InterviewRecordsQueryReq queryReq) {
         return interviewRecordsService.selectPageList(queryReq);
     }
+
+    @RequestMapping(value = "/interviewrecords/interviewrecords/save", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public void save(@RequestBody InterviewRecordsVo interviewRecordsVo) {
+        interviewRecordsService.save(interviewRecordsVo);
+    }
 }

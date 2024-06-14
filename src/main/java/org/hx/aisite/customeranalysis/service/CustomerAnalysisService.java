@@ -1,5 +1,6 @@
 package org.hx.aisite.customeranalysis.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.pagehelper.PageInfo;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysis;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisQueryReq;
@@ -13,7 +14,7 @@ import java.util.List;
  * @author zhanggk
  * @date 2024-06-13
  */
-public interface CustomerAnalysisService{
+public interface CustomerAnalysisService extends IService<CustomerAnalysis> {
 
     /**
      * 用于存储和分析的客户信息表获取分页记录数

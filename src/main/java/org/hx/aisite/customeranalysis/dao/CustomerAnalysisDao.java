@@ -3,6 +3,7 @@ package org.hx.aisite.customeranalysis.dao;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysis;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisQueryReq;
 import org.hx.aisite.customeranalysis.model.CustomerAnalysisVo;
@@ -15,6 +16,7 @@ import java.io.Serializable;
  * @author zhanggk
  * @date 2024-06-13
  */
+@Mapper
 public interface CustomerAnalysisDao extends BaseMapper<CustomerAnalysis> {
 
     /**

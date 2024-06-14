@@ -3,6 +3,7 @@ package org.hx.aisite.interviewrecords.model;
 import java.util.Date;
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class InterviewRecords implements Serializable {
     /**
      * 访谈记录ID，自增长主键
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer recordId;
     /**
      * 咨询师ID，关联consultants表中的咨询师

@@ -1,5 +1,6 @@
 package org.hx.aisite.customeranalysis.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -22,7 +23,7 @@ import java.util.List;
  * @date 2024-06-13
  */
 @Service
-public class CustomerAnalysisServiceImpl implements CustomerAnalysisService {
+public class CustomerAnalysisServiceImpl extends ServiceImpl<CustomerAnalysisDao, CustomerAnalysis> implements CustomerAnalysisService {
 
     /**
      * 用于存储和分析的客户信息表(CustomerAnalysis) 数据访问
@@ -67,11 +68,7 @@ public class CustomerAnalysisServiceImpl implements CustomerAnalysisService {
      */
     @Override
     public CustomerAnalysisVo save(CustomerAnalysisVo customerAnalysis) {
-        if (customerAnalysis.isNew()) {
-            customerAnalysisDao.insert(customerAnalysis);
-        } else {
-            customerAnalysisDao.updateById(customerAnalysis);
-        }
+        customerAnalysisDao.insert(customerAnalysis);
         return customerAnalysis;
     }
 }
