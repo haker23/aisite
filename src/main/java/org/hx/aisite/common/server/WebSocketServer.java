@@ -20,8 +20,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Component
-@ServerEndpoint(value = "/signal/{roomId}/{userId}/{pub}", encoders = {EncoderUtil.class}, decoders = {DecoderUtil.class})
+//@Component
+//@ServerEndpoint(value = "/signal/{roomId}/{userId}/{pub}", encoders = {EncoderUtil.class}, decoders = {DecoderUtil.class})
 public class WebSocketServer {
     /**
      * RedisTemplate

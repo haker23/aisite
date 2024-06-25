@@ -9,7 +9,7 @@ import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
 
-@Configuration
+//@Configuration
 public class WebSocketConfig extends ServerEndpointConfig.Configurator {
 
     @Bean

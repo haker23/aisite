@@ -21,9 +21,6 @@ public class InterviewServiceImpl extends ServiceImpl<InterviewDao, Interview> i
     @Resource
     private InterviewDao interviewDao;
 
-    @Resource
-    private AiChatServer aiChatServer;
-
     @Override
     public InterviewVo createInterview(String userId) {
         InterviewVo interviewVo = new InterviewVo();
@@ -42,23 +39,5 @@ public class InterviewServiceImpl extends ServiceImpl<InterviewDao, Interview> i
     @Override
     public InterviewVo join(String appId) {
         return null;
-    }
-
-    @Override
-    public ChatResponse chat(String prompt) {
-        JSONObject chatRequest = new JSONObject();
-
-        String response = "";
-        try {
-            response = aiChatServer.chat(chatRequest);
-        } catch (JSONException | IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            response = "";
-        }
-
-        ChatResponse chatResponse = new ChatResponse();
-        chatResponse.setResponseMsg(response);
-        return chatResponse;
     }
 }

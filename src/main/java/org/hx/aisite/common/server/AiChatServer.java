@@ -1,12 +1,19 @@
 package org.hx.aisite.common.server;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import okhttp3.*;
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import com.alibaba.dashscope.aigc.generation.Generation;
+import com.alibaba.dashscope.aigc.generation.GenerationParam;
+import com.alibaba.dashscope.aigc.generation.GenerationResult;
+import com.alibaba.dashscope.common.Message;
+import com.alibaba.dashscope.common.ResultCallback;
+import com.alibaba.dashscope.common.Role;
+import com.alibaba.dashscope.exception.ApiException;
+import com.alibaba.dashscope.exception.InputRequiredException;
+import com.alibaba.dashscope.exception.NoApiKeyException;
+import com.alibaba.dashscope.utils.JsonUtils;
+import io.reactivex.Flowable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
-import java.io.IOException;
 
 /**
  * 千帆大模型API服务 ERNIE-3.5-8K
@@ -16,46 +23,79 @@ import java.io.IOException;
  **/
 @Component
 public class AiChatServer {
-    public static final String API_KEY = "atTLLYWLVqYAVyVD8STvhT7E";
-    public static final String SECRET_KEY = "xhH2vpI1kYWs3qdlxmy2jQ6RMadNUbR3";
-
-    static final OkHttpClient HTTP_CLIENT = new OkHttpClient().newBuilder().build();
-
-    public String chat(com.alibaba.fastjson2.JSONObject requestBody) throws IOException, JSONException {
-        MediaType mediaType = MediaType.parse("application/json");
-        RequestBody body = RequestBody.create(mediaType, requestBody.toJSONString());
-        Request request = new Request.Builder()
-            .url("https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/completions?access_token=" + getAccessToken())
-            .method("POST", body)
-            .addHeader("Content-Type", "application/json")
-            .build();
-        Response response = HTTP_CLIENT.newCall(request).execute();
-
-        String chatResponse = "";
-        if (!StringUtils.isEmpty(response.body())) {
-            chatResponse = response.body().string();
-        }
-
-        return chatResponse;
+    public static void streamCallWithMessage()
+            throws NoApiKeyException, ApiException, InputRequiredException {
+        Generation gen = new Generation();
+        Message userMsg =
+                Message.builder().role(Role.USER.getValue()).content("如何做西红柿炖牛腩？").build();
+        GenerationParam param = GenerationParam.builder()
+                .model("qwen-max")
+                .messages(Arrays.asList(userMsg))
+                .resultFormat(GenerationParam.ResultFormat.MESSAGE) // the result if message format.
+                .topP(0.8).enableSearch(true) // set streaming output
+                .incrementalOutput(true) // get streaming output incrementally
+                .build();
+        Flowable<GenerationResult> result = gen.streamCall(param);
+        StringBuilder fullContent = new StringBuilder();
+        result.blockingForEach(message -> {
+            fullContent.append(message.getOutput().getChoices().get(0).getMessage().getContent());
+            System.out.println(JsonUtils.toJson(message));
+        });
+        System.out.println("Full content: \n" + fullContent.toString());
     }
 
-
-    /**
-     * 从用户的AK，SK生成鉴权签名（Access Token）
-     *
-     * @return 鉴权签名（Access Token）
-     * @throws IOException IO异常
-     */
-    static String getAccessToken() throws IOException, JSONException {
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-        RequestBody body = RequestBody.create(mediaType, "grant_type=client_credentials&client_id=" + API_KEY
-                + "&client_secret=" + SECRET_KEY);
-        Request request = new Request.Builder()
-                .url("https://aip.baidubce.com/oauth/2.0/token")
-                .method("POST", body)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+    public static void streamCallWithCallback()
+            throws NoApiKeyException, ApiException, InputRequiredException, InterruptedException {
+        Generation gen = new Generation();
+        Message userMsg =
+                Message.builder().role(Role.USER.getValue()).content("如何做西红柿炖牛腩？").build();
+        GenerationParam param = GenerationParam.builder()
+                .model("${modelCode}")
+                .resultFormat(GenerationParam.ResultFormat.MESSAGE)  //set result format message
+                .messages(Arrays.asList(userMsg)) // set messages
+                .topP(0.8)
+                .incrementalOutput(true) // set streaming output incrementally
                 .build();
-        Response response = HTTP_CLIENT.newCall(request).execute();
-        return new JSONObject(response.body().string()).getString("access_token");
+        Semaphore semaphore = new Semaphore(0);
+        StringBuilder fullContent = new StringBuilder();
+        gen.streamCall(param, new ResultCallback<GenerationResult>() {
+
+            @Override
+            public void onEvent(GenerationResult message) {
+                fullContent
+                        .append(message.getOutput().getChoices().get(0).getMessage().getContent());
+                System.out.println(message);
+            }
+
+            @Override
+            public void onError(Exception err) {
+                System.out.println(String.format("Exception: %s", err.getMessage()));
+                semaphore.release();
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println("Completed");
+                semaphore.release();
+            }
+
+        });
+        semaphore.acquire();
+        System.out.println("Full content: \n" + fullContent.toString());
+    }
+
+    public static void main(String[] args) {
+        try {
+            streamCallWithMessage();
+        } catch (ApiException | NoApiKeyException | InputRequiredException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            streamCallWithCallback();
+        } catch (ApiException | NoApiKeyException | InputRequiredException
+                | InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+        System.exit(0);
     }
 }

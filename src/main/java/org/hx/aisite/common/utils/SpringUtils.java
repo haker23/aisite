@@ -13,7 +13,7 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Repository;
 
-@Repository
+//@Repository
 public class SpringUtils implements BeanFactoryPostProcessor {
 
 

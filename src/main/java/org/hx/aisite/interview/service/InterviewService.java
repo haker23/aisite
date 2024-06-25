@@ -9,6 +9,4 @@ public interface InterviewService extends IService<Interview> {
     InterviewVo createInterview(String userId);
 
     InterviewVo join(String appId);
-
-    ChatResponse chat(String prompt);
 }

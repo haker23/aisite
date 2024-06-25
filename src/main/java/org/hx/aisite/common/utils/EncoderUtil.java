@@ -1,7 +1,7 @@
 package org.hx.aisite.common.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import xx.call.dto.SignalEntity;
+import com.alibaba.fastjson2.JSONObject;
+import org.hx.aisite.common.entity.SignalEntity;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
