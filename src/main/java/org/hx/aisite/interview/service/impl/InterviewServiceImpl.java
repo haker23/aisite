@@ -1,5 +1,7 @@
 package org.hx.aisite.interview.service.impl;
 
+import com.alibaba.dashscope.exception.InputRequiredException;
+import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.hx.aisite.common.entity.ChatResponse;
@@ -21,6 +23,9 @@ public class InterviewServiceImpl extends ServiceImpl<InterviewDao, Interview> i
     @Resource
     private InterviewDao interviewDao;
 
+    @Resource
+    private AiChatServer aiChatServer;
+
     @Override
     public InterviewVo createInterview(String userId) {
         InterviewVo interviewVo = new InterviewVo();
@@ -39,5 +44,19 @@ public class InterviewServiceImpl extends ServiceImpl<InterviewDao, Interview> i
     @Override
     public InterviewVo join(String appId) {
         return null;
+    }
+
+    @Override
+    public ChatResponse chat(String prompt) {
+        String response = "";
+        try {
+            response = aiChatServer.qwenQuickStart(prompt);
+        } catch (NoApiKeyException | InputRequiredException e) {
+            throw new RuntimeException(e);
+        }
+
+        ChatResponse chatResponse = new ChatResponse();
+        chatResponse.setResponseMsg(response);
+        return chatResponse;
     }
 }

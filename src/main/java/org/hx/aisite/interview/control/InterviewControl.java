@@ -25,4 +25,10 @@ public class InterviewControl {
     public InterviewVo joinInterview(@RequestParam("appId") String appId) {
         return interviewService.join(appId);
     }
+
+    @RequestMapping("/chat/{prompt}")
+    @ResponseBody
+    public ChatResponse chat(@PathVariable("prompt") String prompt) {
+        return interviewService.chat(prompt);
+    }
 }

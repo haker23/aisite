@@ -3,6 +3,7 @@ package org.hx.aisite.common.server;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 import com.alibaba.dashscope.aigc.generation.Generation;
+import com.alibaba.dashscope.aigc.generation.GenerationOutput;
 import com.alibaba.dashscope.aigc.generation.GenerationParam;
 import com.alibaba.dashscope.aigc.generation.GenerationResult;
 import com.alibaba.dashscope.common.Message;
@@ -23,79 +24,57 @@ import org.springframework.stereotype.Component;
  **/
 @Component
 public class AiChatServer {
-    public static void streamCallWithMessage()
+
+    private final static String apiKey = "sk-14837c59ea294c95a2efbf85bfd5fa7d";
+
+    public String qwenQuickStart(String prompt)
             throws NoApiKeyException, ApiException, InputRequiredException {
         Generation gen = new Generation();
-        Message userMsg =
-                Message.builder().role(Role.USER.getValue()).content("如何做西红柿炖牛腩？").build();
-        GenerationParam param = GenerationParam.builder()
-                .model("qwen-max")
-                .messages(Arrays.asList(userMsg))
-                .resultFormat(GenerationParam.ResultFormat.MESSAGE) // the result if message format.
-                .topP(0.8).enableSearch(true) // set streaming output
-                .incrementalOutput(true) // get streaming output incrementally
-                .build();
-        Flowable<GenerationResult> result = gen.streamCall(param);
-        StringBuilder fullContent = new StringBuilder();
-        result.blockingForEach(message -> {
-            fullContent.append(message.getOutput().getChoices().get(0).getMessage().getContent());
-            System.out.println(JsonUtils.toJson(message));
-        });
-        System.out.println("Full content: \n" + fullContent.toString());
+        GenerationParam param = GenerationParam.builder().model(Generation.Models.QWEN_TURBO).prompt(prompt).apiKey(apiKey)
+                .topP(0.8).build();
+        GenerationResult result = gen.call(param);
+        GenerationOutput output = result.getOutput();
+        System.out.println("result = " + result);
+        return output.getText();
     }
 
-    public static void streamCallWithCallback()
+    public void qwenQuickStartCallback(String prompt)
             throws NoApiKeyException, ApiException, InputRequiredException, InterruptedException {
         Generation gen = new Generation();
-        Message userMsg =
-                Message.builder().role(Role.USER.getValue()).content("如何做西红柿炖牛腩？").build();
-        GenerationParam param = GenerationParam.builder()
-                .model("${modelCode}")
-                .resultFormat(GenerationParam.ResultFormat.MESSAGE)  //set result format message
-                .messages(Arrays.asList(userMsg)) // set messages
-                .topP(0.8)
-                .incrementalOutput(true) // set streaming output incrementally
-                .build();
+        GenerationParam param = GenerationParam.builder().model(Generation.Models.QWEN_TURBO).prompt(prompt).apiKey(apiKey)
+                .topP(0.8).build();
         Semaphore semaphore = new Semaphore(0);
-        StringBuilder fullContent = new StringBuilder();
-        gen.streamCall(param, new ResultCallback<GenerationResult>() {
+        gen.call(param, new ResultCallback<GenerationResult>() {
 
             @Override
             public void onEvent(GenerationResult message) {
-                fullContent
-                        .append(message.getOutput().getChoices().get(0).getMessage().getContent());
                 System.out.println(message);
             }
 
             @Override
-            public void onError(Exception err) {
-                System.out.println(String.format("Exception: %s", err.getMessage()));
+            public void onError(Exception ex) {
+                System.out.println(ex.getMessage());
                 semaphore.release();
             }
 
             @Override
             public void onComplete() {
-                System.out.println("Completed");
+                System.out.println("onComplete");
                 semaphore.release();
             }
 
         });
         semaphore.acquire();
-        System.out.println("Full content: \n" + fullContent.toString());
     }
 
-    public static void main(String[] args) {
-        try {
-            streamCallWithMessage();
-        } catch (ApiException | NoApiKeyException | InputRequiredException e) {
-            System.out.println(e.getMessage());
-        }
-        try {
-            streamCallWithCallback();
-        } catch (ApiException | NoApiKeyException | InputRequiredException
-                | InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
-        System.exit(0);
-    }
+//    public static void main(String[] args) {
+//        try {
+//            qwenQuickStart();
+//            qwenQuickStartCallback();
+//        } catch (ApiException | NoApiKeyException | InputRequiredException
+//                | InterruptedException e) {
+//            System.out.println(String.format("Exception %s", e.getMessage()));
+//        }
+//        System.exit(0);
+//    }
 }
